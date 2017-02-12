@@ -1,1 +1,1 @@
-taunusliferpg-launcher
+taunuslife-launcher

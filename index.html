@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Taunuslife Launcher</title>
+
+    <!-- config -->
+    <script src="config.js"></script>
+
+    <!-- angular -->
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/angular-tooltips/dist/angular-tooltips.min.js"></script>
+    <link href="node_modules/angular-tooltips/dist/angular-tooltips.min.css" rel="stylesheet">
+
+    <!-- tether -->
+    <link href="node_modules/tether/dist/css/tether.min.css" rel="stylesheet">
+    <script src="node_modules/tether/dist/js/tether.min.js"></script>
+
+    <!-- jquery -->
+    <script type="text/javascript">
+      window.$ = window.jQuery = require('./resources/jquery/jquery-1.12.3.min.js');
+    </script>
+
+    <!-- bootstrap -->
+    <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- fa icons-->
+    <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
+
+    <!-- alertify -->
+    <script src="node_modules/alertify/lib/alertify.min.js"></script>
+    <!-- include the core styles -->
+    <link rel="stylesheet" href="resources/css/alertify.core.css" />
+
+    <!-- perfect-scrollbar -->
+    <script src="node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.min.js"></script>
+    <link rel="stylesheet" href="node_modules/perfect-scrollbar/dist/css/perfect-scrollbar.min.css">
+
+    <link href="node_modules/icheck/skins/minimal/minimal.css" rel="stylesheet">
+    <script src="node_modules/icheck/icheck.min.js"></script>
+
+    <!-- custom css/js -->
+    <link rel="stylesheet" href="resources/css/custom.css">
+
+    <script type="text/javascript" src="index.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="bg-img"></div>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <img src="resources/img/dropper.png" style="position: absolute; left: 0">
+        <div class="container container-navbar">
+            <div class="navbar-header">
+                <a href="https://taunuslife.de" class="navbar-brand"><img src="resources/img/logo.png"></a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <button ng-click="minimizeApp()"
+                                class="btn btn-warning btn-minimize glyphicon glyphicon-minus"></button>
+                    </li>
+                    <li>
+                        <button ng-click="closeApp()"
+                                class="btn btn-danger btn-close glyphicon glyphicon-remove"></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="container">
+            <ul class="nav nav-tabs nav-justified main-nav">
+                <li class="active"><a data-toggle="tab" href="#mods">Mods</a></li>
+                <li><a id="settingsTab" data-toggle="tab" href="#settings">Einstellungen</a></li>
+                <li><a data-toggle="tab" href="#about">Info</a></li>
+            </ul>
+            <div class="tab-content main-content">
+                <div id="mods" class="tab-pane fade in active" ng-controller="modController" data-ng-init="init()">
+                    <div class="row">
+                        <div class="col-lg-8" id="modScroll" style="position: relative">
+                            <div class="loading-centered" ng-if="loading">
+                                <img src="resources/loading/loading.svg">
+                            </div>
+                            <div id="modCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner" role="listbox">
+                                    <div class="item" ng-repeat="mod in mods" ng-class='{active:$first}'>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="panel panel-mod">
+                                                    <div class="panel-heading">
+                                                        <h4 class="margin-none">{{mod.Name}}</h4>
+                                                    </div>
+                                                    <div class="panel-body">
+                                                        <img ng-src="{{mod.ImageUrl}}" class="modImg img-thumbnail">
+                                                        <hr>
+                                                        {{mod.Description}}
+                                                    </div>
+                                                    <div class="panel-footer">
+                                                        <div class="btn-group btn-group-sm">
+                                                            <button class="btn btn-success btn-sm"
+                                                                    ng-click="action(mod)"
+                                                                    ng-disabled="downloading || mod.state[0] == 0">
+                                                                {{mod.state[1]}}
+                                                            </button>
+                                                            <button class="btn btn-warning btn-sm"
+                                                                    ng-show="mod.state[0] !== 0 && mod.HasGameFiles"
+                                                                    ng-click="initHash(mod)" ng-disabled="downloading">
+                                                                Prüfen
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm" ng-click="refresh()"
+                                                                    ng-disabled="downloading || mod.state[0] == 0"><i
+                                                                    class="fa fa-refresh" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Left and right controls -->
+                                <a class="left carousel-control" href="#modCarousel" role="button" data-slide="prev">
+                                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#modCarousel" role="button" data-slide="next">
+                                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <ul class="list-group list-group-unbordered margin-none">
+                                <li class="list-group-item">
+                                    <b>Status</b> <a class="pull-right"><span tooltips tooltip-template="{{hint}}">{{state}}</span></a>
+                                </li>
+                                <li class="list-group-item" ng-if="downloading && downSpeed > 0">
+                                    <b>Download</b> <a class="pull-right"><span tooltips
+                                                                                tooltip-template="Download Geschwindigkeit">{{downSpeed}} Mb/s</span></a>
+                                </li>
+                                <li class="list-group-item" ng-if="totalSize > 0">
+                                    <b>Heruntergeladen</b> <a class="pull-right">{{totalDownloaded}} GB/{{totalSize}}
+                                    GB</a>
+                                </li>
+                                <li class="list-group-item" ng-if="totalETA !== ''">
+                                    <b>Verbleibend</b> <a class="pull-right"><span tooltips
+                                                                                   tooltip-template="Zeit verbleibend">{{totalETA}}</span></a>
+                                </li>
+                            </ul>
+                            <br>
+                            <button class="btn btn-danger btn-sm pull-right" ng-click="cancel()" ng-if="downloading">
+                                Abbrechen <i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="settings" class="tab-pane fade">
+                    <div class="container" ng-controller="settingsController" data-ng-init="init()">
+                        <div class="page">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="pathInput">Arma 3 Pfad</label>
+                                    <div class="input-group">
+                                        <input id="pathInput" class="form-control" type="text"
+                                               placeholder="Kein Arma Pfad gesetzt" ng-model="ArmaPath" disabled>
+                                        <span class="input-group-btn">
+                                                <button ng-disabled="downloading" class="btn btn-primary" type="button"
+                                                        ng-click="chooseArmaPath()"><span
+                                                        class="glyphicon glyphicon-open-file"></span></button>
+                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group form-inline">
+                                        <label for="splashCheck">Kein Splashscreen</label>
+                                        <span class="pull-right">
+                                                <input id="splashCheck" type="checkbox">
+                                            </span>
+                                        <hr>
+                                        <label for="introCheck">Intro überspringen</label>
+                                        <span class="pull-right">
+                                                <input id="introCheck" type="checkbox">
+                                            </span>
+                                        <hr>
+                                        <label for="htCheck">Hyper-Threading</label>
+                                        <span class="pull-right">
+                                                <input id="htCheck" type="checkbox">
+                                            </span>
+                                        <hr>
+                                        <label for="windowedCheck">Fenstermodus</label>
+                                        <span class="pull-right">
+                                                <input id="windowedCheck" type="checkbox">
+                                            </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="memInput">Maximaler RAM</label>
+                                                <input ng-model="mem" ng-change="saveSettings()" id="memInput"
+                                                       class="form-control" type="number">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="vmemInput">Maximaler vRam</label>
+                                                <input ng-model="vram" ng-change="saveSettings()" id="vmemInput"
+                                                       class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="cpuInput">CPU Anzahl</label>
+                                                <input ng-model="cpu" ng-change="saveSettings()" id="cpuInput"
+                                                       class="form-control" type="number">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="threadsInput">Extra Threads</label>
+                                                <input ng-model="thread" ng-change="saveSettings()" id="threadsInput"
+                                                       class="form-control" type="number">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="addInput">Eigene Startparameter</label>
+                                                <input ng-model="add_params" ng-change="saveSettings()" id="addInput"
+                                                       class="form-control" type="text">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="about" ng-controller="aboutController" class="tab-pane fade">
+                    <div class="row">
+                        <div class="col-md-3 centered">
+                            <a class="no-deco" href="ts3server://ts.frozentech.de">
+                                <img src="resources/icon/teamspeak.png">
+                            </a>
+                            <br>
+                            <h4><a href="ts3server://ts.frozentech.de">Teamspeak 3</a></h4>
+                        </div>
+                        <div class="col-md-3 centered">
+                            <a class="no-deco" href="http://taunusliferpg.de/forum/">
+                                <img src="resources/icon/forum.png">
+                            </a>
+                            <br>
+                            <h4><a href="https://forum.taunuslife.de/">Forum</a></h4>
+                        </div>
+                        <div class="col-md-3 centered">
+                            <a class="no-deco" href="http://taunusliferpg.de">
+                                <img src="resources/icon/web.png">
+                            </a>
+                            <br>
+                            <h4><a href="http://taunusliferpg.de/">Website</a></h4>
+                        </div>
+                        <div class="col-md-3 centered">
+                            <a class="no-deco" href="https://github.com/Kaibu">
+                                <img src="resources/icon/kaibu.jpg" width="128" height="128">
+                            </a>
+                            <br>
+                            <h4><a href="https://github.com/Kaibu">Autor: Kaibu</a></h4>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="centered">
+                        <h4>TaunuslifeRPG Launcher v{{version}} by Kaibu</h4>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="pg-bars">
+                <span class="label label-primary label-large" ng-if="fileName !== ''">{{fileName}}</span>
+                <span class="label label-primary pull-right" ng-if="speed > 0">{{speed}} Mb/s</span>
+                <div class="progress progress-striped active" ng-if="fileProgress > 0">
+                    <div class="progress-bar progress-bar-success" style="width: {{fileProgress}}%;"></div>
+                </div>
+                <div class="progress progress-striped active">
+                    <div class="progress-bar" style="width: {{totalProgress}}%;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+<script>
+  $(document).on('click', 'a[href^="htt"]', function (event) {
+    if (this.href != "") {
+      event.preventDefault();
+      shell.openExternal(this.href);
+    }
+  });
+
+  $(document).ready(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_minimal',
+      radioClass: 'iradio_minimal',
+      increaseArea: '20%' // optional
+    });
+    appLoaded()
+  });
+</script>
+</html>
