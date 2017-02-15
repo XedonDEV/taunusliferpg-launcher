@@ -303,7 +303,7 @@ App.controller('modController', ['$scope', '$rootScope', function ($scope, $root
           params.push('-mod=' + mod.Directories)
 
           if (mod.ExParams !== null && typeof mod.ExParams !== 'undefined') {
-            params.push(mod.ExParams)
+            params.extend(mod.ExParams.split(';'))
           }
 
           if (data.splash) {
@@ -452,60 +452,6 @@ App.controller('modController', ['$scope', '$rootScope', function ($scope, $root
   }
 }
 ])
-
-App.controller('serverController', ['$scope', '$sce', function ($scope, $sce) {
-  $scope.joinServer = function (server) {
-    if (server.appId === 107410) {
-      storage.get('settings', function (err, data) {
-        if (err) throw err
-
-        var params = []
-
-        params.push('-noLauncher')
-        params.push('-useBE')
-        params.push('-connect=' + server.IpAddress)
-        params.push('-port=' + server.Port)
-        params.push('-mod=' + server.StartParameters)
-        params.push('-password=' + server.ServerPassword)
-
-        if (data.splash) {
-          params.push('-nosplash')
-        }
-        if (data.intro) {
-          params.push('-skipIntro')
-        }
-        if (data.ht) {
-          params.push('-enableHT')
-        }
-        if (data.windowed) {
-          params.push('-window')
-        }
-
-        if (data.mem != null && data.mem !== '') {
-          params.push('-maxMem=' + data.mem)
-        }
-        if (data.vram != null && data.vram !== '') {
-          params.push('-maxVRAM=' + data.vram)
-        }
-        if (data.cpu != null && data.cpu !== '') {
-          params.push('-cpuCount=' + data.cpu)
-        }
-        if (data.thread != null && data.thread !== '') {
-          params.push('-exThreads=' + data.thread)
-        }
-        if (data.add_params != null && data.add_params !== '') {
-          params.push(data.add_params)
-        }
-
-        spawnNotification('Arma wird gestartet...')
-        child.spawn((data.armapath + '\\arma3launcher.exe'), params, [])
-      })
-    } else {
-      spawnNotification('Das Spiel wird gestartet...')
-      shell.openExternal('steam://connect/' + server.IpAddress + ':' + server.Port)
-    }
-  }
-}])
 
 App.controller('settingsController', ['$scope', '$rootScope', function ($scope, $rootScope) {
   $scope.init = function () {
