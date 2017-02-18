@@ -1,6 +1,6 @@
 {
   "name": "TaunuslifeRPG",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "TaunuslifeRPG Launcher",
   "homepage": "https://github.com/Kaibu",
   "author": "Kaibu",
@@ -22,8 +22,8 @@
     "mac.category": "launcher.application",
     "win": {
       "title": "TaunuslifeRPG Launcher",
-      "iconUrl": "https://kaibu.me/taunusliferpgicon.ico",
-      "remoteReleases": "https://kaibu.me/taunusliferpg-launcher",
+      "iconUrl": "https://webstorage1.gaming-provider.com/dwcentral/taunusliferpg/launcher-update/taunusliferpgicon.ico",
+      "remoteReleases": "https://webstorage1.gaming-provider.com/dwcentral/taunusliferpg/launcher-update",
       "target": "squirrel"
     },
     "squirrelWindows": {

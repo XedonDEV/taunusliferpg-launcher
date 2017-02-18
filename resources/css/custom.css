@@ -28,7 +28,7 @@
 }
 
 .label-adac {
-    background-color: #C00100;
+    background-color: #d97219;
 }
 
 .label-large {
@@ -54,8 +54,8 @@
 
 .navbar {
     -webkit-app-region: drag;
-    background-color: #0d0e0e ;
-    border-bottom: 10px solid #cb3131;
+    background-color: #2d2d2d;
+    border-bottom: 10px solid #D97219;
 }
 
 button, .nav {
@@ -100,15 +100,15 @@ button, .nav {
 }
 
 .main-nav > li > a:hover {
-    color: #cb3131 !important;
+    color: #d97219 !important;
 }
 
 .main-nav > li.active > a {
-    color: #992D2D !important;
+    color: #d97219 !important;
 }
 
 .main-nav > li.active > a:hover {
-    color: #bf3939 !important;
+    color: #d97219 !important;
 }
 
 .main-content {
@@ -189,7 +189,7 @@ alertify
 .alertify-message {
     padding: 15px;
     color: #ffffff;
-    background-color: #cb3131;
+    background-color: #d97219;
     margin: 0;
 }
 
