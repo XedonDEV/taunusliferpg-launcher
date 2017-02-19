@@ -222,3 +222,7 @@ ipcMain.on('close-app', function (event) {
 ipcMain.on('minimize-app', function (event) {
   win.minimize()
 })
+
+ipcMain.on('restart-update', function (event) {
+  autoUpdater.quitAndInstall()
+})

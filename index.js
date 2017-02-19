@@ -626,4 +626,10 @@ function appLoaded () { // eslint-disable-line
 
 ipcRenderer.on('update-downloaded', function (event, args) {
   spawnNotification('Update ' + args.releaseName + ' bereit.')
+  alertify.set({labels: {ok: 'Update', cancel: 'Abbrechen'}})
+  alertify.confirm('Update zur Version ' + args.releaseName + ' bereit.', function (e) {
+    if (e) {
+      ipcRenderer.send('restart-update')
+    }
+  })
 })
