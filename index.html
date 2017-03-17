@@ -2,7 +2,7 @@
 <html ng-app="App">
 <head>
     <meta charset="UTF-8">
-    <title>TaunuslifeRPG Launcher</title>
+    <title>TaunusLifeRPG Launcher</title>
 
     <!-- config -->
     <script src="config.js"></script>
@@ -166,6 +166,51 @@
                                 Abbrechen <i class="fa fa-times"></i></button>
                         </div>
                     </div>
+                    <div class="pg-bars">
+                        <span class="label label-primary label-large" ng-if="fileName !== ''">{{fileName}}</span>
+                        <span class="label label-primary pull-right" ng-if="speed > 0">{{speed}} Mb/s</span>
+                        <div class="progress progress-striped active" ng-if="fileProgress > 0">
+                            <div class="progress-bar progress-bar-success" style="width: {{fileProgress}}%;"></div>
+                        </div>
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar" style="width: {{totalProgress}}%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="TFAR" class="tab-pane fade">
+                    <div id="tfar">
+                        <div class="container" ng-controller="tfarController" data-ng-init="init()">
+                            <h3>Task Force Arma Radio</h3>
+                            <hr>
+                            <div class="page">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        Hier kannst du das TFAR Teamspeak Plugin per klick herunterladen und installieren.
+                                        <br>
+                                        <br>
+                                        Bitte denke an die richtige Version für deinen Teamspeak Client!
+                                        <br>
+                                        Teamspeak muss vor der Installation geschlossen werden!
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button class="btn btn-success pull-right" ng-click="initTFARDownload('3.1.1.1')">Download für Teamspeak 3.x</button>
+                                        <br>
+                                        <br>
+                                        <br>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="progress progress-striped active">
+                                            <div class="progress-bar" style="width: {{tfarProgress}}%"></div>
+                                        </div>
+                                        <span class="pull-right" ng-if="tfarSpeed !== 0">{{tfarSpeed}} Mb/s</span>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
                 <div id="settings" class="tab-pane fade">
                     <div class="container" ng-controller="settingsController" data-ng-init="init()">
@@ -250,6 +295,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="about" ng-controller="aboutController" class="tab-pane fade">
                     <div class="row">
                         <div class="col-md-3 centered">
@@ -257,14 +303,14 @@
                                 <img src="resources/icon/teamspeak.png">
                             </a>
                             <br>
-                            <h4><a href="ts3server://ts.frozentech.de">Teamspeak 3</a></h4>
+                            <h4><a href="ts3server://ts.taunusliferpg.de">Teamspeak 3</a></h4>
                         </div>
                         <div class="col-md-3 centered">
                             <a class="no-deco" href="http://taunusliferpg.de/forum/">
                                 <img src="resources/icon/forum.png">
                             </a>
                             <br>
-                            <h4><a href="https://forum.taunuslife.de/">Forum</a></h4>
+                            <h4><a href="http://taunusliferpg.de/forum/">Forum</a></h4>
                         </div>
                         <div class="col-md-3 centered">
                             <a class="no-deco" href="http://taunusliferpg.de">
@@ -283,23 +329,13 @@
                     </div>
                     <hr>
                     <div class="centered">
-                        <h4>TaunuslifeRPG Launcher v{{version}} by Kaibu
+                        <h4>TaunusLifeRPG Launcher v{{version}} by Kaibu
                             <br>
                             <p><em>supported by Global-Players.net</em></p>
                         <br>
                     </div>
                     <div class="centered">
                         <a href="http://www.gametracker.com/server_info/88.99.140.6:2302/" target="_blank"><img src="http://cache.gametracker.com/server_info/88.99.140.6:2302/b_560_95_1.png" border="0" width="560" height="95" alt=""/></a>
-                </div>
-            </div>
-            <div class="pg-bars">
-                <span class="label label-primary label-large" ng-if="fileName !== ''">{{fileName}}</span>
-                <span class="label label-primary pull-right" ng-if="speed > 0">{{speed}} Mb/s</span>
-                <div class="progress progress-striped active" ng-if="fileProgress > 0">
-                    <div class="progress-bar progress-bar-success" style="width: {{fileProgress}}%;"></div>
-                </div>
-                <div class="progress progress-striped active">
-                    <div class="progress-bar" style="width: {{totalProgress}}%;"></div>
                 </div>
             </div>
         </div>

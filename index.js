@@ -1,5 +1,5 @@
 /*
- * Taunuslife Launcher by Kaibu
+ * TaunuslifeRPG Launcher by Kaibu
  *
  * Email: NotKaibu@gmail.com
  * Web: kaibu.me
@@ -452,7 +452,6 @@ App.controller('modController', ['$scope', '$rootScope', function ($scope, $root
   }
 }
 ])
-
 App.controller('settingsController', ['$scope', '$rootScope', function ($scope, $rootScope) {
   $scope.init = function () {
     storage.get('settings', function (error, data) {
@@ -567,15 +566,15 @@ App.controller('settingsController', ['$scope', '$rootScope', function ($scope, 
   $scope.chooseArmaPath = function () {
     var options = {
       filters: [{
-        name: 'Arma3.exe',
+        name: 'arma3_x64',
         extensions: ['exe']
       }],
-      title: 'Bitte wähle deine Arma3.exe aus',
+      title: 'Bitte wähle deine Arma3_x64.exe aus',
       properties: ['openFile']
     }
     var path = String(dialog.showOpenDialog(options))
-    if (path !== 'undefined' && path.indexOf('\\arma3.exe') > -1) {
-      $rootScope.ArmaPath = path.replace('arma3.exe', '')
+    if (path !== 'undefined' && path.indexOf('\\arma3_x64.exe') > -1) {
+      $rootScope.ArmaPath = path.replace('arma3_x64.exe', '')
       $scope.saveSettings()
       $rootScope.refresh()
     } else {
@@ -587,6 +586,42 @@ App.controller('settingsController', ['$scope', '$rootScope', function ($scope, 
 
 App.controller('aboutController', ['$scope', function ($scope) {
   $scope.version = app.getVersion()
+}])
+
+App.controller('tfarController', ['$scope', '$rootScope', function ($scope, $rootScope) {
+    $scope.initTFARDownload = function (version) {
+        $scope.tfarDownloading = true
+        ipcRenderer.send('to-web', {
+            type: 'start-tfar-download',
+            version: version
+        })
+    }
+
+    $scope.tfarProgress = 0
+    $scope.tfarSpeed = 0
+    $scope.tfarDownloading = false
+
+    ipcRenderer.on('to-app', function (event, args) {
+        switch (args.type) {
+            case 'update-dl-progress-tfar':
+                $scope.tfarProgress = toProgress(args.state.percent)
+                $scope.tfarSpeed = toMB(args.speed)
+                break
+            case 'update-dl-progress-tfar-done':
+                $scope.tfarProgress = 100
+                $scope.tfarSpeed = 0
+                alertify.log('Wird ausgeführt...', 'primary')
+                if (!shell.openItem(args.tfarPath)) {
+                    alertify.log('Fehlgeschlagen', 'danger')
+                    var stream = fs.createReadStream(args.tfarPath).pipe(unzip.Extract({path: app.getPath('downloads') + '\\TFAR'}))
+                    stream.on('close', function () {
+                        fs.unlinkSync(app.getPath('downloads') + '\\TFAR\\package.ini')
+                        shell.showItemInFolder(app.getPath('downloads') + '\\TFAR')
+                    })
+                }
+                break
+        }
+    })
 }])
 
 function getMods () {
