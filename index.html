@@ -63,6 +63,10 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li>
+                        <button ng-click="refresh()"
+                                class="btn btn-success btn-reload glyphicon glyphicon-refresh"></button>
+                    </li>
+                    <li>
                         <button ng-click="minimizeApp()"
                                 class="btn btn-warning btn-minimize glyphicon glyphicon-minus"></button>
                     </li>
@@ -76,11 +80,27 @@
     </div>
     <div class="content">
         <div class="container">
+            <div class="container-menu">
             <ul class="nav nav-tabs nav-justified main-nav">
-                <li class="active"><a data-toggle="tab" href="#mods">Mods</a></li>
-                <li><a id="settingsTab" data-toggle="tab" href="#settings">Einstellungen</a></li>
-                <li><a data-toggle="tab" href="#about">Info</a></li>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <li class="active"><a data-toggle="tab" href="#mods"><i class="fa fa-code fa-2x" aria-hidden="true"></i></a></li><br>
+                <li><a id="tfar" data-toggle="tab" href="#TFAR"><i class="fa fa-microphone fa-2x" aria-hidden="true"></i></a></li><br>
+                <li><a id="settingsTab" data-toggle="tab" href="#settings"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></a></li><br>
+                <li><a data-toggle="tab" href="#about"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></a></li>
             </ul>
+            </div>
+            <br>
+            <br>
+            <br>
             <div class="tab-content main-content">
                 <div id="mods" class="tab-pane fade in active" ng-controller="modController" data-ng-init="init()">
                     <div class="row">
@@ -117,10 +137,7 @@
                                                                     ng-click="initHash(mod)" ng-disabled="downloading">
                                                                 Prüfen
                                                             </button>
-                                                            <button class="btn btn-danger btn-sm" ng-click="refresh()"
-                                                                    ng-disabled="downloading || mod.state[0] == 0"><i
-                                                                    class="fa fa-refresh" aria-hidden="true"></i>
-                                                            </button>
+                                                            <button class="btn btn-success btn-sm" ng-show="mod.state[0] !== 0 && mod.HasGameFiles" ng-click="openModDir(mod)"><span class=" glyphicon glyphicon-folder-open"></span></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -131,8 +148,10 @@
 
                                     </div>
                                 </div>
-
+                                <br>
+                                <br>
                                 <!-- Left and right controls -->
+                                <!--
                                 <a class="left carousel-control" href="#modCarousel" role="button" data-slide="prev">
                                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                                     <span class="sr-only">Previous</span>
@@ -140,10 +159,10 @@
                                 <a class="right carousel-control" href="#modCarousel" role="button" data-slide="next">
                                     <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
                                     <span class="sr-only">Next</span>
-                                </a>
+                                </a> -->
                             </div>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="down-list">
                             <ul class="list-group list-group-unbordered margin-none">
                                 <li class="list-group-item">
                                     <b>Download-Status</b> <a class="pull-right"><span tooltips tooltip-template="{{hint}}">{{state}}</span></a>
@@ -177,6 +196,9 @@
                         </div>
                     </div>
                 </div>
+                <br>
+                <br>
+                <br>
                 <div id="TFAR" class="tab-pane fade">
                     <div id="tfar">
                         <div class="container" ng-controller="tfarController" data-ng-init="init()">
@@ -184,33 +206,33 @@
                             <hr>
                             <div class="page">
                                 <div class="row">
-                                    <div class="col-md-8">
-                                        Hier kannst du das TFAR Teamspeak Plugin per klick herunterladen und installieren.
+                                    <div class="col-md-10">
+                                        Downloaded eine .ts3_plugin Datei und führt diese aus.
+                                        <br>
+                                        Teamspeak muss vor der Installation geschlossen werden
                                         <br>
                                         <br>
-                                        Bitte denke an die richtige Version für deinen Teamspeak Client!
+                                        Wenn der automatische Download fehlschlägt kannst du das Plugin auch im /DeinArmaDIR/@TaunusLifeRPG Ordner finden.
                                         <br>
-                                        Teamspeak muss vor der Installation geschlossen werden!
+                                        Diese müssen dann manuell in den Teamspeak Ordner entpackt werden.
+                                        <br>
+                                        Du brauchst Hilfe oder etwas funktioniert nicht ? Melde dich im Support!
                                     </div>
-                                    <div class="col-md-4">
-                                        <button class="btn btn-success pull-right" ng-click="initTFARDownload('3.1.1.1')">Download für Teamspeak 3.x</button>
-                                        <br>
-                                        <br>
-                                        <br>
+                                    <div class="col-md-2">
+                                        <button class="btn btn-success pull-right" tooltips tooltip-template="Teamspeak 3.1.0.1+" ng-click="initFileDownload('TaunusLifeRPGTFAR_latest.ts3_plugin')">Plugin Download</button>
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="row">
+                                <div class="row" ng-show="fileDownloading">
                                     <div class="col-md-12">
                                         <div class="progress progress-striped active">
-                                            <div class="progress-bar" style="width: {{tfarProgress}}%"></div>
+                                            <div class="progress-bar" style="width: {{fileProgress}}%"></div>
                                         </div>
-                                        <span class="pull-right" ng-if="tfarSpeed !== 0">{{tfarSpeed}} Mb/s</span>
+                                        <span class="pull-right" ng-if="fileSpeed !== 0">{{fileSpeed}} Mb/s</span>
                                     </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
                 <div id="settings" class="tab-pane fade">
                     <div class="container" ng-controller="settingsController" data-ng-init="init()">
@@ -334,9 +356,6 @@
                             <p><em>supported by Global-Players.net</em></p>
                         <br>
                     </div>
-                    <div class="centered">
-                        <a href="http://www.gametracker.com/server_info/88.99.140.6:2302/" target="_blank"><img src="http://cache.gametracker.com/server_info/88.99.140.6:2302/b_560_95_1.png" border="0" width="560" height="95" alt=""/></a>
-                </div>
             </div>
         </div>
 

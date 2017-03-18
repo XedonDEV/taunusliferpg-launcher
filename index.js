@@ -50,6 +50,7 @@ var App = angular.module('App', ['720kb.tooltips']).run(function ($rootScope) {
 
   ipcRenderer.on('update-available', function (event) {
     spawnNotification('Update verfügbar, wird geladen...')
+    alertify.log('Update verfügbar, wird geladen...', 'primary')
     $rootScope.updating = true
   })
 })
@@ -277,72 +278,70 @@ App.controller('modController', ['$scope', '$rootScope', function ($scope, $root
       })
     }, true)
 
-  $rootScope.$watch(
-    'ArmaPath', function () {
-      if ($scope.mods !== undefined) {
-        $scope.checkUpdates()
-      }
-    }, true)
+    $scope.action = function (mod) {
+        switch (mod.state[0]) {
+            case 1:
+                $scope.initDownload(mod)
+                break
+            case 2:
+                $scope.initUpdate(mod)
+                break
+            case 3:
+                storage.get('settings', function (err, data) {
+                    if (err) throw err
 
-  $scope.action = function (mod) {
-    switch (mod.state[0]) {
-      case 1:
-        $scope.initDownload(mod)
-        break
-      case 2:
-        $scope.initUpdate(mod)
-        break
-      case 3:
-        storage.get('settings', function (err, data) {
-          if (err) throw err
+                    var params = []
 
-          var params = []
+                    params.push('-noLauncher')
+                    params.push('-useBE')
+                    params.push('-mod=' + mod.Directories)
 
-          params.push('-noLauncher')
-          params.push('-useBE')
-          params.push('-mod=' + mod.Directories)
+                    if (mod.ExParams !== null && typeof mod.ExParams !== 'undefined') {
+                        params.extend(mod.ExParams.split(';'))
+                    }
 
-          if (mod.ExParams !== null && typeof mod.ExParams !== 'undefined') {
-            params.extend(mod.ExParams.split(';'))
-          }
+                    if (data.splash) {
+                        params.push('-nosplash')
+                    }
+                    if (data.intro) {
+                        params.push('-skipIntro')
+                    }
+                    if (data.ht) {
+                        params.push('-enableHT')
+                    }
+                    if (data.windowed) {
+                        params.push('-window')
+                    }
 
-          if (data.splash) {
-            params.push('-nosplash')
-          }
-          if (data.intro) {
-            params.push('-skipIntro')
-          }
-          if (data.ht) {
-            params.push('-enableHT')
-          }
-          if (data.windowed) {
-            params.push('-window')
-          }
+                    if (data.mem !== null && data.mem !== '' && typeof data.mem !== 'undefined') {
+                        params.push('-maxMem=' + data.mem)
+                    }
+                    if (data.vram !== null && data.vram !== '' && typeof data.vram !== 'undefined') {
+                        params.push('-maxVRAM=' + data.vram)
+                    }
+                    if (data.cpu !== null && data.cpu !== '' && typeof data.cpu !== 'undefined') {
+                        params.push('-cpuCount=' + data.cpu)
+                    }
+                    if (data.thread !== null && data.thread !== '' && typeof data.thread !== 'undefined') {
+                        params.push('-exThreads=' + data.thread)
+                    }
+                    if (data.add_params !== null && data.add_params !== '' && typeof data.add_params !== 'undefined') {
+                        params.push(data.add_params)
+                    }
 
-          if (data.mem !== null && data.mem !== '' && typeof data.mem !== 'undefined') {
-            params.push('-maxMem=' + data.mem)
-          }
-          if (data.vram !== null && data.vram !== '' && typeof data.vram !== 'undefined') {
-            params.push('-maxVRAM=' + data.vram)
-          }
-          if (data.cpu !== null && data.cpu !== '' && typeof data.cpu !== 'undefined') {
-            params.push('-cpuCount=' + data.cpu)
-          }
-          if (data.thread !== null && data.thread !== '' && typeof data.thread !== 'undefined') {
-            params.push('-exThreads=' + data.thread)
-          }
-          if (data.add_params !== null && data.add_params !== '' && typeof data.add_params !== 'undefined') {
-            params.push(data.add_params)
-          }
-
-          spawnNotification('Arma wird gestartet...')
-          child.spawn((data.armapath + '\\arma3launcher.exe'), params, [])
-        })
-        break
-      default:
-        break
+                    spawnNotification('Arma wird gestartet...')
+                    child.spawn((data.armapath + '\\arma3launcher.exe'), params, [])
+                })
+                break
+            default:
+                break
+        }
     }
-  }
+
+    $scope.openModDir = function (mod) {
+        shell.showItemInFolder($rootScope.ArmaPath + '\\' + mod.Directories + '\\addons')
+    }
+
 
   $scope.checkUpdates = function () {
     for (var i = 0; i < $scope.mods.length; i++) {
@@ -588,35 +587,46 @@ App.controller('aboutController', ['$scope', function ($scope) {
   $scope.version = app.getVersion()
 }])
 
-App.controller('tfarController', ['$scope', '$rootScope', function ($scope, $rootScope) {
-    $scope.initTFARDownload = function (version) {
-        $scope.tfarDownloading = true
-        ipcRenderer.send('to-web', {
-            type: 'start-tfar-download',
-            version: version
-        })
+App.controller('tfarController', ['$scope', '$rootScope', function ($scope) {
+    $scope.initFileDownload = function (file) {
+        if (!$scope.fileDownloading) {
+            $scope.fileDownloading = true
+            ipcRenderer.send('to-web', {
+                type: 'start-file-download',
+                file: file
+            })
+        } else {
+            alertify.log('Download läuft bereits', 'danger')
+        }
     }
 
-    $scope.tfarProgress = 0
-    $scope.tfarSpeed = 0
-    $scope.tfarDownloading = false
+    $scope.fileProgress = 0
+    $scope.fileSpeed = 0
+    $scope.fileDownloading = false
 
     ipcRenderer.on('to-app', function (event, args) {
         switch (args.type) {
-            case 'update-dl-progress-tfar':
-                $scope.tfarProgress = toProgress(args.state.percent)
-                $scope.tfarSpeed = toMB(args.speed)
+            case 'update-dl-progress-file':
+                $scope.fileProgress = toProgress(args.state.percent)
+                $scope.fileSpeed = toMB(args.state.speed)
+                $scope.$apply()
                 break
-            case 'update-dl-progress-tfar-done':
-                $scope.tfarProgress = 100
-                $scope.tfarSpeed = 0
+            case 'update-dl-progress-file-done':
+                $scope.fileProgress = 100
+                $scope.fileSpeed = 0
+                $scope.fileDownloading = false
+                $scope.$apply()
                 alertify.log('Wird ausgeführt...', 'primary')
-                if (!shell.openItem(args.tfarPath)) {
+                if (!shell.openItem(args.filePath)) {
                     alertify.log('Fehlgeschlagen', 'danger')
-                    var stream = fs.createReadStream(args.tfarPath).pipe(unzip.Extract({path: app.getPath('downloads') + '\\TFAR'}))
+                    var stream = fs.createReadStream(args.filePath).pipe(unzip.Extract({path: app.getPath('downloads') + '\\TaunusLifeRPG'}))
                     stream.on('close', function () {
-                        fs.unlinkSync(app.getPath('downloads') + '\\TFAR\\package.ini')
-                        shell.showItemInFolder(app.getPath('downloads') + '\\TFAR')
+                        try {
+                            fs.unlinkSync(app.getPath('downloads') + '\\TaunusLifeRPG\\package.ini')
+                        } catch (err) {
+                            console.log(err)
+                        }
+                        shell.showItemInFolder(app.getPath('downloads') + '\\TaunusLifeRPG')
                     })
                 }
                 break

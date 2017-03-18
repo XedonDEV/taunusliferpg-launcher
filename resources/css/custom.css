@@ -10,6 +10,15 @@
     -webkit-user-select: none;
     -ms-user-select: none;
 }
+body, html {
+    overflow: hidden;
+    background-size: cover;
+    background-attachment: fixed;
+    position: absolute;
+    background-image: url("../../resources/img/bg.jpg");
+    height: 100%;
+    width: 100%;
+}
 
 .nav, .pagination, .panel-title a {
     cursor: pointer;
@@ -52,10 +61,17 @@
     border-radius: 0;
 }
 
+.carousel-caption .btn {
+    text-shadow: none;
+}
+
 .navbar {
     -webkit-app-region: drag;
-    background-color: #2d2d2d;
-    border-bottom: 10px solid #D97219;
+    background-color: #333333;
+    border-bottom: 10px solid #333333;
+}
+.fa {
+
 }
 
 button, .nav {
@@ -63,14 +79,15 @@ button, .nav {
 }
 
 .container-navbar {
-    margin-left: 25px;
-    margin-right: 15px;
+    left: 7px;
+    top: 9px;
     width: auto;
 }
 
 .btn-close {
     height: 30px;
-    margin-top: 7px;
+    top: 15px;
+    margin-right: 10px;
     padding-bottom: 5px;
     padding-top: 5px;
     width: 60px;
@@ -78,37 +95,54 @@ button, .nav {
 
 .btn-minimize {
     height: 30px;
-    margin-top: 7px;
+    top: 15px;
     margin-right: 10px;
-    padding-bottom: 0;
-    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    width: 60px;
+}
+
+.btn-reload {
+    height: 30px;
+    top: 15px;
+    margin-right: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
     width: 60px;
 }
 
 .content {
     margin-top: 55px;
 }
+.container-menu {
+    position: fixed;
+    background-color: #333333;
+    width: 85px;
+    height: 100%;
+    left: 0px;
+}
 
 .main-nav {
-    background-color: #2a2a2a;
+    background-color: #333333;
 }
 
 .main-nav > li > a {
-    background-color: #2a2a2a !important;
+    background-color: #333333 !important;
     border: none !important;
     cursor: pointer;
 }
 
 .main-nav > li > a:hover {
-    color: #d97219 !important;
+    background-color: #d97219 !important;
 }
 
 .main-nav > li.active > a {
-    color: #d97219 !important;
+    background-color: #d97219 !important;
 }
 
 .main-nav > li.active > a:hover {
-    color: #d97219 !important;
+    background-color: #d97219 !important;
+    color: #f0ede7;
 }
 
 .main-content {
@@ -118,7 +152,11 @@ button, .nav {
 }
 
 .pg-bars {
-    margin-top: 20px;
+    margin-top: 10px;
+    opacity: 0.7;
+
+    margin-left: 80px;
+    margin-right: 20px;
 }
 
 .progress {
@@ -129,29 +167,40 @@ button, .nav {
 
 .panel-mod {
     text-align: center;
+    opacity: 0.8;
 }
 
 .modImg {
     width: 320px;
+    opacity: 1;
 }
 
 .list-group-item {
     background-color: transparent;
 }
+.down-list {
+    background-color: #2a2a2a;
+    opacity: 0.8;
+    width: 300px;
+    height: 280px;
+    position: relative;
+    right: 105px;
+    float: right;
+    padding: 10px;
+    border-radius: 3px;
+}
 
-.loading-centered {
+.loading-centered {*
     width: 100%;
     text-align: center;
 }
 
-.bg-img {
+navbar-brand {
+    left: 10px;
+    top: 5px;
     position: absolute;
-    left: 0;
-    top: 0;
-    background-image: url("../../resources/img/bg.png");
-    height: 100%;
-    width: 100%;
-    opacity: 0.1;
+    width: 80%;
+    height: 80%;
 }
 
 .centered {
@@ -209,7 +258,7 @@ alertify
 
 .alertify-buttons {
     padding: 10px 15px;
-    background-color: #2a2a2a;
+    background-color: #;
     text-align: right;
 }
 
