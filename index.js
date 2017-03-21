@@ -41,10 +41,12 @@ var App = angular.module('App', ['720kb.tooltips']).run(function ($rootScope) {
   }
 
   ipcRenderer.on('checking-for-update', function (event) {
+    alertify.log('Suche nach Updates...', 'primary')
     $rootScope.updating = true
   })
 
   ipcRenderer.on('update-not-available', function (event) {
+    alertify.log('Launcher ist aktuell', 'primary')
     $rootScope.updating = false
   })
 
@@ -586,6 +588,72 @@ App.controller('settingsController', ['$scope', '$rootScope', function ($scope, 
 App.controller('aboutController', ['$scope', function ($scope) {
   $scope.version = app.getVersion()
 }])
+
+/*App.controller('serverController', ['$scope', '$sce', function ($scope, $sce) {
+    $scope.redrawChart = function (server) {
+        var data = {
+                ' Zivilisten',
+                ' Polizisten',
+                ' Medics',
+
+                labels: [' ADAC'
+            ],
+            datasets: [
+                {
+                    data: [server.Civilians, server.Cops, server.Medics, server.Adac],
+                    backgroundColor: [
+                        '#8B008B',
+                        '#0000CD',
+                        '#228B22',
+                        '#C00100'
+                    ]
+                }]
+        }
+
+        var xhx = $('#serverChart' + server.Id)
+        var chart = new Chart(xhx, { // eslint-disable-line
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: false,
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        })
+    }
+
+    $scope.init = function () {
+        $scope.loading = true
+        getServers()
+        getNotification()
+    }
+
+    $scope.showTab = function (tabindex) {
+        $('.serverTab').removeClass('active')
+        $('.serverPane').removeClass('active')
+        $('#serverTab' + tabindex).addClass('active')
+        $('#serverPane' + tabindex).addClass('active')
+    }
+
+    ipcRenderer.on('to-app', function (event, args) {
+        switch (args.type) {
+            case 'servers-callback':
+                $scope.servers = args.data.data
+                $scope.loading = false
+                $scope.$apply()
+                if (typeof $scope.servers !== 'undefined') {
+                    for (var i = 0; i < $scope.servers.length; i++) {
+                        $scope.servers[i].DescriptionHTML = $sce.trustAsHtml($scope.servers[i].Description)
+                        $scope.redrawChart($scope.servers[i])
+                        $('#playerScroll' + $scope.servers[i].Id).perfectScrollbar()
+                    }
+                }
+                break
+        }
+    })
+*/
+
 
 App.controller('tfarController', ['$scope', '$rootScope', function ($scope) {
     $scope.initFileDownload = function (file) {

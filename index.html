@@ -42,6 +42,9 @@
 
     <!-- custom css/js -->
     <link rel="stylesheet" href="resources/css/custom.css">
+    <!-- HoverCSS css/js -->
+    <link rel="stylesheet" href="resources/css/hover.css">
+    <link rel="stylesheet" href="resources/css/hover-min.css">
 
     <script type="text/javascript" src="index.js"></script>
 </head>
@@ -51,7 +54,7 @@
     <div class="navbar navbar-default navbar-fixed-top">
         <div class="container container-navbar">
             <div class="navbar-header">
-                <a href="https://taunusliferpg.de" class="navbar-brand"><img src="resources/img/logo.png"></a>
+                <a href="https://taunusliferpg.de" class="navbar-brand"><img class="hvr-rotate hvr-grow" src="resources/img/logo.png"></a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -93,8 +96,10 @@
                 <br>
                 <br>
                 <li class="active"><a data-toggle="tab" href="#mods"><i class="fa fa-code fa-2x" aria-hidden="true"></i></a></li><br>
+                <!--<li><a id="server" data-toggle="tab" href="#server"><i class="fa fa fa-server fa-2x" aria-hidden="true"></i></a></li><br>-->
                 <li><a id="tfar" data-toggle="tab" href="#TFAR"><i class="fa fa-microphone fa-2x" aria-hidden="true"></i></a></li><br>
                 <li><a id="settingsTab" data-toggle="tab" href="#settings"><i class="fa fa-cogs fa-2x" aria-hidden="true"></i></a></li><br>
+                <li><a id="faqtab" data-toggle="tab" href="#faq"><i class="fa fa-question fa-2x" aria-hidden="true"></i></a></li><br>
                 <li><a data-toggle="tab" href="#about"><i class="fa fa-info-circle fa-2x" aria-hidden="true"></i></a></li>
             </ul>
             </div>
@@ -106,7 +111,7 @@
                     <div class="row">
                         <div class="col-lg-8" id="modScroll" style="position: relative">
                             <div class="loading-centered" ng-if="loading">
-                                <img src="resources/loading/loading.svg">
+                                <img src="resources/loading/ellipsis.svg">
                             </div>
                             <div id="modCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
                                 <!-- Wrapper for slides -->
@@ -196,119 +201,290 @@
                         </div>
                     </div>
                 </div>
-                <br>
-                <br>
-                <br>
-                <div id="TFAR" class="tab-pane fade">
-                    <div id="tfar">
-                        <div class="container" ng-controller="tfarController" data-ng-init="init()">
-                            <h3>Task Force Arma Radio</h3>
-                            <hr>
+                <!--<div id="server" class="tab-pane fade">
+                     <div id="server">
+                             <div class="row" ng-controller="serverController" data-ng-init="init()">
+                                 <h3>ReallifeRPG Server</h3>
+                                 <hr>
+                                 <div class="page">
+                                     <div style="text-align: center" ng-show="loading">
+                                         <img src="resources/loading/cube.svg"/>
+                                     </div>
+                                     <ul class="nav nav-tabs">
+                                         <li  ng-class={active:(0==$index)} class="serverTab" id="serverTab{{server.Id}}" ng-repeat="server in servers">
+                                             <a ng-click="showTab(server.Id)">{{server.Servername}} <span class="label label-success">{{server.Playercount}}/{{server.Slots}}</span></a>
+                                         </li>
+                                     </ul>
+                                     <div class="tab-content">
+                                         <div  ng-class={active:(0==$index)} id="serverPane{{server.Id}}" class="tab-pane fade in serverPane" ng-repeat="server in servers">
+                                             <br>
+                                             <br>
+                                             <div class="row">
+                                                 <div class="col-md-4">
+                                                     <canvas ng-show="{{server.appId === 107410 && server.Gamemode === 1}}" id="serverChart{{server.Id}}" width="387" height="387"/>
+                                                 </div>
+                                                 <div class="col-md-4">
+                                                     <div ng-show="{{server.Playercount != 0}}">
+                                                         <h5>Spieler <span class="pull-right">{{server.Playercount}}/{{server.Slots}}</span></h5>
+                                                         <ul id="playerScroll{{server.Id}}" class="list-group list-group-unbordered margin-none" style="height: 350px;position: relative;">
+                                                             <li class="list-group-item" ng-repeat="player in server.Players">
+                                                                 <b>{{player}}</b>
+                                                             </li>
+                                                         </ul>
+                                                     </div>
+                                                 </div>
+                                                 <div class="col-md-4">
+                                                     <h5>Daten</h5>
+                                                     <ul class="list-group list-group-unbordered margin-none">
+                                                         <li class="list-group-item" ng-show="{{server.appId === 107410 && server.Gamemode === 1}}">
+                                                             <b>Zivilisten</b> <a class="pull-right"><span class="label label-civ">{{server.Civilians}}</span></a>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="{{server.appId === 107410 && server.Gamemode === 1}}">
+                                                             <b>Polizisten</b> <a class="pull-right"><span class="label label-cop">{{server.Cops}}</span></a>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="{{server.appId === 107410 && server.Gamemode === 1}}">
+                                                             <b>Medics</b> <a class="pull-right"><span class="label label-medic">{{server.Medics}}</span></a>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="{{server.appId === 107410 && server.Gamemode === 1}}">
+                                                             <b>Adac</b> <a class="pull-right"><span class="label label-adac">{{server.Adac}}</span></a>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="{{server.appId === 107410}}">
+                                                             <b>IP:Port</b> <a class="pull-right">{{server.IpAddress}}:{{server.Port}}</a>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="server.StartParameters !== '' && server.StartParameters.length < 20">
+                                                             <b>Parameter</b> <a class="pull-right">{{server.StartParameters}}</a>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="server.ServerPassword !== ''">
+                                                             <b>Passwort</b> <a class="pull-right">{{server.ServerPassword}}</a>
+                                                         </li>
+                                                         <li class="list-group-item" >
+                                                         </li>
+                                                         <b ng-show="server.Description !== '' && server.Description !== null">Informationen</b>
+                                                         <li class="list-group-item" ng-show="server.Description !== '' && server.Description !== null" ng-bind-html="server.DescriptionHTML">
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="server.StartParameters !== '' && server.StartParameters.length >= 20 && server.StartParameters.length <= 40">
+                                                             <b>Parameter</b>
+                                                         </li>
+                                                         <li class="list-group-item" ng-show="server.StartParameters !== '' && server.StartParameters.length >= 20 && server.StartParameters.length <= 40">
+                                                             <a>{{server.StartParameters}}</a>
+                                                         </li>
+                                                     </ul>
+                                                     <button class="btn btn-success pull-right btn-sm" style="margin-top: 10px" ng-click="joinServer(server)"><i class="fa fa-play" aria-hidden="true"></i> Joinen</button>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>-->
+                 <br>
+                 <br>
+                 <br>
+                 <div id="TFAR" class="tab-pane fade">
+                     <div id="tfar">
+                         <div class="container" ng-controller="tfarController" data-ng-init="init()">
+                             <h4>Task Force Radio - Download</h4>
+                             <hr>
+                             <div class="page">
+                                 <div class="row">
+                                     <div class="col-md-10">
+                                         Downloaded eine .ts3_plugin Datei und führt diese aus.
+                                         <br>
+                                         Teamspeak muss vor der Installation geschlossen werden
+                                         <br>
+                                         <br>
+                                         Wenn der automatische Download fehlschlägt kannst du das Plugin auch im /DeinArmaDIR/@TaunusLifeRPG Ordner finden.
+                                         <br>
+                                         Diese müssen dann manuell in den Teamspeak Ordner entpackt werden.
+                                         <br>
+                                         <br>
+                                         Du brauchst Hilfe oder etwas funktioniert nicht ? Melde dich im Support!
+                                     </div>
+                                     <div class="col-md-2">
+                                         <button class="btn btn-success pull-right" tooltips tooltip-template="Teamspeak 3.1.0.1+" ng-click="initFileDownload('task_force_radio.ts3_plugin')">Plugin Download</button>
+                                     </div>
+                                 </div>
+                                 <div class="row" ng-show="fileDownloading">
+                                     <div class="col-md-12">
+                                         <div class="progress progress-striped active">
+                                             <div class="progress-bar" style="width: {{fileProgress}}%"></div>
+                                         </div>
+                                         <span class="pull-right" ng-if="fileSpeed !== 0">{{fileSpeed}} Mb/s</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                 <div id="settings" class="tab-pane fade">
+                     <div class="container" ng-controller="settingsController" data-ng-init="init()">
+                         <div class="page">
+                             <div class="row">
+                                 <div class="col-md-12">
+                                     <label for="pathInput">Arma 3 Pfad</label>
+                                     <div class="input-group">
+                                         <input id="pathInput" class="form-control" type="text"
+                                                placeholder="Kein Arma Pfad gesetzt" ng-model="ArmaPath" disabled>
+                                         <span class="input-group-btn">
+                                                 <button ng-disabled="downloading" class="btn btn-primary" type="button"
+                                                         ng-click="chooseArmaPath()"><span
+                                                         class="glyphicon glyphicon-open-file"></span></button>
+                                             </span>
+                                     </div>
+                                 </div>
+                             </div>
+                             <hr>
+                             <div class="row">
+                                 <div class="col-md-4">
+                                     <div class="form-group form-inline">
+                                         <label for="splashCheck">Kein Splashscreen</label>
+                                         <span class="pull-right">
+                                                 <input id="splashCheck" type="checkbox">
+                                             </span>
+                                         <hr>
+                                         <label for="introCheck">Intro überspringen</label>
+                                         <span class="pull-right">
+                                                 <input id="introCheck" type="checkbox">
+                                             </span>
+                                         <hr>
+                                         <label for="htCheck">Hyper-Threading</label>
+                                         <span class="pull-right">
+                                                 <input id="htCheck" type="checkbox">
+                                             </span>
+                                         <hr>
+                                         <label for="windowedCheck">Fenstermodus</label>
+                                         <span class="pull-right">
+                                                 <input id="windowedCheck" type="checkbox">
+                                             </span>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-8">
+                                     <div class="row">
+                                         <div class="col-md-6">
+                                             <div class="form-group">
+                                                 <label for="memInput">Maximaler RAM</label>
+                                                 <input ng-model="mem" ng-change="saveSettings()" id="memInput"
+                                                        class="form-control" type="number">
+                                             </div>
+                                             <div class="form-group">
+                                                 <label for="vmemInput">Maximaler vRam</label>
+                                                 <input ng-model="vram" ng-change="saveSettings()" id="vmemInput"
+                                                        class="form-control" type="number">
+                                             </div>
+                                         </div>
+                                         <div class="col-md-6">
+                                             <div class="form-group">
+                                                 <label for="cpuInput">CPU Anzahl</label>
+                                                 <input ng-model="cpu" ng-change="saveSettings()" id="cpuInput"
+                                                        class="form-control" type="number">
+                                             </div>
+                                             <div class="form-group">
+                                                 <label for="threadsInput">Extra Threads</label>
+                                                 <input ng-model="thread" ng-change="saveSettings()" id="threadsInput"
+                                                        class="form-control" type="number">
+                                             </div>
+                                         </div>
+                                     </div>
+                                     <div class="row">
+                                         <div class="col-md-12">
+                                             <div class="form-group">
+                                                 <label for="addInput">Eigene Startparameter</label>
+                                                 <input ng-model="add_params" ng-change="saveSettings()" id="addInput"
+                                                        class="form-control" type="text">
+                                             </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+                <div id="faq" class="tab-pane fade">
+                    <div id="faqtab">
+                        <div class="container-faq">
+                            <h4>FAQ</h4>
                             <div class="page">
-                                <div class="row">
-                                    <div class="col-md-10">
-                                        Downloaded eine .ts3_plugin Datei und führt diese aus.
-                                        <br>
-                                        Teamspeak muss vor der Installation geschlossen werden
-                                        <br>
-                                        <br>
-                                        Wenn der automatische Download fehlschlägt kannst du das Plugin auch im /DeinArmaDIR/@TaunusLifeRPG Ordner finden.
-                                        <br>
-                                        Diese müssen dann manuell in den Teamspeak Ordner entpackt werden.
-                                        <br>
-                                        Du brauchst Hilfe oder etwas funktioniert nicht ? Melde dich im Support!
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button class="btn btn-success pull-right" tooltips tooltip-template="Teamspeak 3.1.0.1+" ng-click="initFileDownload('TaunusLifeRPGTFAR_latest.ts3_plugin')">Plugin Download</button>
-                                    </div>
-                                </div>
-                                <div class="row" ng-show="fileDownloading">
-                                    <div class="col-md-12">
-                                        <div class="progress progress-striped active">
-                                            <div class="progress-bar" style="width: {{fileProgress}}%"></div>
+                                <div class="panel-group" id="faqAccordion">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading accordion-toggle question-toggle collapsed" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question0">
+                                            <h4 class="panel-title">
+                                                <a href="#" class="ing">Mein Teamspeak stürtzt immer ab ?</a>
+                                            </h4>
                                         </div>
-                                        <span class="pull-right" ng-if="fileSpeed !== 0">{{fileSpeed}} Mb/s</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="settings" class="tab-pane fade">
-                    <div class="container" ng-controller="settingsController" data-ng-init="init()">
-                        <div class="page">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="pathInput">Arma 3 Pfad</label>
-                                    <div class="input-group">
-                                        <input id="pathInput" class="form-control" type="text"
-                                               placeholder="Kein Arma Pfad gesetzt" ng-model="ArmaPath" disabled>
-                                        <span class="input-group-btn">
-                                                <button ng-disabled="downloading" class="btn btn-primary" type="button"
-                                                        ng-click="chooseArmaPath()"><span
-                                                        class="glyphicon glyphicon-open-file"></span></button>
-                                            </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group form-inline">
-                                        <label for="splashCheck">Kein Splashscreen</label>
-                                        <span class="pull-right">
-                                                <input id="splashCheck" type="checkbox">
-                                            </span>
-                                        <hr>
-                                        <label for="introCheck">Intro überspringen</label>
-                                        <span class="pull-right">
-                                                <input id="introCheck" type="checkbox">
-                                            </span>
-                                        <hr>
-                                        <label for="htCheck">Hyper-Threading</label>
-                                        <span class="pull-right">
-                                                <input id="htCheck" type="checkbox">
-                                            </span>
-                                        <hr>
-                                        <label for="windowedCheck">Fenstermodus</label>
-                                        <span class="pull-right">
-                                                <input id="windowedCheck" type="checkbox">
-                                            </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="memInput">Maximaler RAM</label>
-                                                <input ng-model="mem" ng-change="saveSettings()" id="memInput"
-                                                       class="form-control" type="number">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="vmemInput">Maximaler vRam</label>
-                                                <input ng-model="vram" ng-change="saveSettings()" id="vmemInput"
-                                                       class="form-control" type="number">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="cpuInput">CPU Anzahl</label>
-                                                <input ng-model="cpu" ng-change="saveSettings()" id="cpuInput"
-                                                       class="form-control" type="number">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="threadsInput">Extra Threads</label>
-                                                <input ng-model="thread" ng-change="saveSettings()" id="threadsInput"
-                                                       class="form-control" type="number">
+                                        <div id="question0" class="panel-collapse collapse" style="height: 0;">
+                                            <div class="panel-body">
+                                                Wir verwenden derzeit eine sich noch in der Entwicklung befindliche Version von TFAR um alle Funktionen nutzen zu können. <br>
+                                                Solltest du Probleme mit TFAR haben:
+                                                <ul>
+                                                <li>
+                                                    aktualisiere bitte dein Teamspeak und deinstalliere das TFAR Plugin
+                                                </li>
+                                                <li>
+                                                    beende dein Teamspeak und installiere das Plugin über den Launcher neu.
+                                                </li>
+                                                <li>
+                                                    öffne das TaunusLifeRPG Modpack und lösche alle TFAR Mods, sowie die Taskforce-Radio-Pipe.
+                                                </li>
+                                                    <li>
+                                                        lade abschließend die gelöschten Dateien wieder runter und lass dein Modpack nocheinmal überprüfen.
+                                                    </li>
+                                                    <li>
+                                                      Solltest du Hilfe benötigen wende dich an den Support im <a class="txt hvr-grow" href="ts3server://ts.frozentech.de">Teamspeak</a>
+                                                  </li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="addInput">Eigene Startparameter</label>
-                                                <input ng-model="add_params" ng-change="saveSettings()" id="addInput"
-                                                       class="form-control" type="text">
+                                    <div class="panel panel-default ">
+                                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question1">
+                                            <h4 class="panel-title">
+                                                <a href="#" class="ing">Ich werde vom Server immer gekickt ?</a>
+                                            </h4>
+                                        </div>
+                                        <div id="question1" class="panel-collapse collapse" style="height: 0;">
+                                            <div class="panel-body">
+                                                Nutze den Button "Prüfen" zum Überprüfen der Mods
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question2">
+                                            <h4 class="panel-title">
+                                                <a href="#" class="ing">Bei mir ist der Download sehr langsam ?</a>
+                                            </h4>
+                                        </div>
+                                        <div id="question2" class="panel-collapse collapse" style="height: 0;">
+                                            <div class="panel-body">
+                                                Die Downloadgeschwindigkeit ist abhängig von:<br>
+                                                <ul>
+                                                    <li>
+                                                        Deinem Internet, mache jetzt einen <a class="txt hvr-grow" href="https://speedtest.net">Speedtest</a> um deine Internetgeschwindigkeit zu testen.
+                                                    </li>
+                                                    <li>
+                                                        Deiner Festplatte, mit einer SSD kannst du oft deutlich schnellere Datenübertragungen erreichen als beispielsweise mit einer HDD.
+                                                    </li>
+                                                </ul>
+                                                <br>
+                                                Sollte keiner dieser Punkte auf dein Problem zutreffen, wende dich bitte direkt an <a class="txt hvr-grow" href="http://steamcommunity.com/id/XedonTV/">mich</a>.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading accordion-toggle collapsed question-toggle" data-toggle="collapse" data-parent="#faqAccordion" data-target="#question4">
+                                            <h4 class="panel-title">
+                                                <a href="#" class="ing">Du hast ein Problem / Bug im Launcher ?</a>
+                                            </h4>
+                                        </div>
+                                        <div id="question4" class="panel-collapse collapse" style="height: 0;">
+                                            <div class="panel-body">
+                                                Du hast folgende Möglichkeiten um einen Bug zu melden:
+                                                <ul>
+                                                    <li><a class="txt hvr-grow" href="http://steamcommunity.com/id/XedonTV/">Xedon (Entwickler / Ansprechpartner)</a></li>
+                                                    <li><a class="txt hvr-grow" href="https://taunusliferpg.de/forum">Forum</a></li>
+                                                    <li><a class="txt hvr-grow" href="ts3server://ts.frozentech.de">Teamspeak</a></li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -317,66 +493,66 @@
                         </div>
                     </div>
                 </div>
+                 <div id="about" ng-controller="aboutController" class="tab-pane fade">
+                     <div class="row">
+                         <div class="col-md-3 centered">
+                             <i class="fa fa-microphone fa-5x" style="color:#bec0cb" aria-hidden="true"></i>
+                             <a class="no-deco" href="ts3server://ts.frozentech.de">
+                             </a>
+                             <br>
+                             <h4><a class="txt hvr-grow" href="ts3server://ts.taunusliferpg.de">Teamspeak 3</a></h4>
+                         </div>
+                         <div class="col-md-3 centered">
+                             <i class="fa fa-comments fa-5x" style="color:#bec0cb" aria-hidden="true"></i>
+                             <a class="no-deco" href="http://taunusliferpg.de/forum/">
+                             </a>
+                             <br>
+                             <h4><a class="txt hvr-grow" href="http://taunusliferpg.de/forum/">Forum</a></h4>
+                         </div>
+                         <div class="col-md-3 centered">
+                             <i class="fa fa-globe fa-5x" style="color:#bec0cb" aria-hidden="true"></i>
+                             <a class="no-deco" href="http://taunusliferpg.de">
+                             </a>
+                             <br>
+                             <h4><a class="txt hvr-grow" href="http://taunusliferpg.de/">Website</a></h4>
+                         </div>
+                         <div class="col-md-3 centered">
+                             <i class="fa fa-github fa-5x" style="color:#bec0cb" aria-hidden="true"></i>
+                             <a class="no-deco" href="https://github.com/Kaibu">
+                             </a>
+                             <br>
+                             <h4><a class="txt hvr-grow" href="https://github.com/Kaibu">Kaibu</a></h4>
+                         </div>
+                     </div>
+                     <hr>
+                     <div class="centered">
+                         <div class="footer-txt">
+                         <h4>TaunusLifeRPG Launcher v{{version}} by Xedon & Kaibu</h4>
+                             <br>
+                             <p href="www.viruzmedia.de" class="hvr-grow"><em>Designed by ViruzMedia</em></p><br>
+                         </div>
+                     </div>
+             </div>
+         </div>
 
-                <div id="about" ng-controller="aboutController" class="tab-pane fade">
-                    <div class="row">
-                        <div class="col-md-3 centered">
-                            <a class="no-deco" href="ts3server://ts.frozentech.de">
-                                <img src="resources/icon/teamspeak.png">
-                            </a>
-                            <br>
-                            <h4><a href="ts3server://ts.taunusliferpg.de">Teamspeak 3</a></h4>
-                        </div>
-                        <div class="col-md-3 centered">
-                            <a class="no-deco" href="http://taunusliferpg.de/forum/">
-                                <img src="resources/icon/forum.png">
-                            </a>
-                            <br>
-                            <h4><a href="http://taunusliferpg.de/forum/">Forum</a></h4>
-                        </div>
-                        <div class="col-md-3 centered">
-                            <a class="no-deco" href="http://taunusliferpg.de">
-                                <img src="resources/icon/web.png">
-                            </a>
-                            <br>
-                            <h4><a href="http://taunusliferpg.de/">Website</a></h4>
-                        </div>
-                        <div class="col-md-3 centered">
-                            <a class="no-deco" href="https://github.com/Kaibu">
-                                <img class="img-circle" src="resources/icon/kaibu.jpg" width="128" height="128">
-                            </a>
-                            <br>
-                            <h4><a href="https://github.com/Kaibu">Kaibu</a></h4>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="centered">
-                        <h4>TaunusLifeRPG Launcher v{{version}} by Kaibu
-                            <br>
-                            <p><em>supported by Global-Players.net</em></p>
-                        <br>
-                    </div>
-            </div>
-        </div>
+     </div>
+ </div>
+ </body>
+ <script>
+   $(document).on('click', 'a[href^="htt"]', function (event) {
+     if (this.href != "") {
+       event.preventDefault();
+       shell.openExternal(this.href);
+     }
+   });
 
-    </div>
-</div>
-</body>
-<script>
-  $(document).on('click', 'a[href^="htt"]', function (event) {
-    if (this.href != "") {
-      event.preventDefault();
-      shell.openExternal(this.href);
-    }
-  });
-
-  $(document).ready(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_minimal',
-      radioClass: 'iradio_minimal',
-      increaseArea: '20%' // optional
-    });
-    appLoaded()
-  });
-</script>
-</html>
+   $(document).ready(function () {
+     $('input').iCheck({
+       checkboxClass: 'icheckbox_minimal',
+       radioClass: 'iradio_minimal',
+       increaseArea: '20%' // optional
+     });
+     appLoaded()
+   });
+ </script>
+ </html>

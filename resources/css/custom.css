@@ -69,6 +69,7 @@ body, html {
     -webkit-app-region: drag;
     background-color: #333333;
     border-bottom: 10px solid #333333;
+    opacity: 0.9;
 }
 .fa {
 
@@ -120,7 +121,9 @@ button, .nav {
     width: 85px;
     height: 100%;
     left: 0px;
+    opacity: 0.9;
 }
+
 
 .main-nav {
     background-color: #333333;
@@ -190,7 +193,7 @@ button, .nav {
     border-radius: 3px;
 }
 
-.loading-centered {*
+.loading-centered {
     width: 100%;
     text-align: center;
 }
@@ -210,7 +213,13 @@ navbar-brand {
 .no-deco {
     text-decoration: none !important;
 }
+.txt {
+    color: #ffffff;
+}
+.footer-txt {
 
+    position: center;
+}
 /*
 alertify
 */
@@ -325,4 +334,7 @@ alertify
 
 .alertify-log-primary {
     background-color: #df691a;
+}
+.navbar-collapse {
+    max-height: 50px;
 }
